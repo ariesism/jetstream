@@ -31,6 +31,19 @@ class Pages extends Component
         $this->modalFormVisible = true;
     }
 
+    public function rules()
+    {
+        return [
+            'title' => 'required',
+            'content' => 'required',
+        ];
+    }
+    
+    /**
+     * The create function.
+     *
+     * @return void
+     */
     public function create()
     {
         Page::create($this->modelData());
@@ -52,7 +65,12 @@ class Pages extends Component
             'content' => $this->content
         ];
     }
-
+    
+    /**
+     * Reset the varables after creating data
+     *
+     * @return void
+     */
     public function resetData()
     {
         $this->title = null;
