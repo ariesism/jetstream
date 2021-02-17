@@ -5,16 +5,52 @@
         </x-jet-button>
     </div>
 
+    <!-- Data Table -->
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+            <tr>
+                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">title</th>
+                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">content</th>
+                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            @if ($data->count())
+                @foreach ($data as $item)
+                    <tr>
+                        <td class="px-6 py-4 bg-gray-50 text-sm whitespace-no-wrap">{{ $item->title }}</td>
+                        <td class="px-6 py-4 bg-gray-50 text-sm whitespace-no-wrap">{{ $item->slug }}</td>
+                        <td class="px-6 py-4 bg-gray-50 text-sm whitespace-no-wrap">{!! $item->content !!}</td>
+                        <td class="px-6 py-4 text-right text-sm">
+                            <x-jet-button wire:click="updateShowModal({{ $item->id }})">
+                                {{ __('Update') }}
+                            </x-jet-button>
+                            <x-jet-danger-button wire:click="createShowModal">
+                                {{ __('Delete') }}
+                            </x-jet-button>
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td class="px-6 py-4 bg-gray-50 text-sm whitespace-no-wrap" colspan="4">no data found</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+
     <!-- Form Modal -->
     <x-jet-dialog-modal wire:model="modalFormVisible">
         <x-slot name="title">
-            {{ __('Save Page') }}
+            {{ __('Save Page') }} {{ $modelId }}
         </x-slot>
 
         <x-slot name="content">
             <div class="mt-4">
                 <x-jet-label for="title" value="{{ __('Title') }}" />
-                <x-jet-input id="title" type="text" name="title" wire:model.debunce.800ms="title" class="mt-1 block w-full" required />
+                <x-jet-input id="title" type="text" name="title" wire:model.debounce.500ms="title" class="mt-1 block w-full" required />
+                @error('title') <span class="error">{{ $message }}</span> @enderror
             </div>
             <div class="mt-4">
                 <x-jet-label for="slug" value="{{ __('Slug') }}" />
@@ -24,6 +60,7 @@
                     </span>
                     <input type="text" wire:model="slug" class="form-input flex-1 block w-full rounded-none rounded-r-md transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="slug-url">
                 </div>
+                @error('slug') <span class="error">{{ $message }}</span> @enderror
             </div>
             <div class="mt-4">
                 <x-jet-label for="title" value="{{ __('Content') }}" />
@@ -39,6 +76,7 @@
                         </div>
                     </div>
                 </div>
+                @error('content') <span class="error">{{ $message }}</span> @enderror
             </div>
         </x-slot>
 
